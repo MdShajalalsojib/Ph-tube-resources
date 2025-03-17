@@ -1,3 +1,11 @@
+function removeActiveClass(){
+    const activeButtons = document.getElementsByClassName("active");
+    for(let btn of activeButtons){
+        btn.classList.remove("active");
+    }
+    console.log(activeButtons);
+}
+console.log("index is connected");
 function loadCategories(){
     //   fetch in API 
     fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -10,7 +18,35 @@ function loadCategories(){
 function loadVideos(){
     fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
     .then ((response) => response.json())
-    .then((data) =>  displayVideos(data.videos));
+    .then((data) =>  {
+        document.getElementById("btn-all").classList.add("active");
+        displayVideos(data.videos)
+    
+    });
+}
+
+const loadCategoryVideos = (id) => {
+     
+    const url = `https://openapi.programming-hero.com/api/phero-tube/category/${id}`;
+    
+    console.log(url);
+    fetch (url)
+    .then((res) => res.json())
+    .then((data) =>  {
+        removeActiveClass();
+        const clickedButton = document.getElementById(`btn-${id}`);
+        clickedButton.classList.add("active")
+        console.log(clickedButton)
+        displayVideos(data.category)
+    });
+
+}
+const loadVideoDetails = (videoId) => {
+    console.log(videoId);
+    const url =`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`;
+    fetch(url)
+    .then((res) => res.json())
+    .then((data) => console.log(data));
 }
 
 function displayCategories (categories){
@@ -26,7 +62,8 @@ function displayCategories (categories){
     // create Element 
     const categoryDiv = document.createElement("div");
     categoryDiv.innerHTML = `
-         <button class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cat.category}</button>
+         <button id="btn-${cat.category_id}" onclick="loadCategoryVideos(${cat.category_id})" 
+         class="btn btn-sm hover:bg-[#FF1F3D] hover:text-white">${cat.category}</button>
     `;
 
     // Append the Element 
@@ -36,6 +73,16 @@ function displayCategories (categories){
 
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById("video-containe");
+
+    videoContainer.innerHTML="";
+
+    if(videos.length == 0){
+        videoContainer.innerHTML= `<div class="py-20 col-span-full flex flex-col text-center justify-center items-center">
+            <img class="[120px]" src="img/Icon.png" alt="">
+            <h2 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h2>
+        </div>`
+        return;
+    }
 
     videos.forEach(video => {
         console.log(video);
@@ -69,9 +116,13 @@ const displayVideos = (videos) => {
                   <p class="text-sm text-gray-400"> ${video.others.views} views</p>
 
                </div>
+                
           </div>
+          <button onclick=loadVideoDetails('${video.video_id}') class="btn btn-block">Show Details</button>
 
-        `;
+        </div>
+
+     `;
         // append 
         videoContainer.append(videoCard);
         
@@ -79,4 +130,3 @@ const displayVideos = (videos) => {
 };
 
 loadCategories();
-loadVideos();

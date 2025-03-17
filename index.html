@@ -6,6 +6,12 @@
     <title>PH-TUBE-RESOURCES</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+ <style>
+    .active{
+    background:#FF1F3D;
+    color:white;
+}
+ </style>
 </head>
 <body>
      
@@ -27,14 +33,18 @@
 
     <nav id="category-container" class="flex py-5 justify-center gap-5">
          <div>
-            <button class="btn btn-sm  bg-[#FF1F3D] text-white">All</button>
+            <button id="btn-all" onclick="loadVideos()" 
+            class="btn btn-sm   ">All</button>
          </div>
          
 
     </nav>
 
     <section class="w-11/12 mx-auto grid grid-cols-4 gap-5" id="video-containe">
-
+        <div class="py-20 col-span-full flex flex-col text-center justify-center items-center">
+            <img class="[120px]" src="img/Icon.png" alt="">
+            <h2 class="text-2xl font-bold">Oops!! Sorry, There is no content here</h2>
+        </div>
          
     </section>
     <script src="javaSc.js"></script>
